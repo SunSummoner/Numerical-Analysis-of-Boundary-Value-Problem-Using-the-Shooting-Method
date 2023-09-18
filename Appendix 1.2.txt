@@ -1,0 +1,26 @@
+%%Appendix 1.2
+%%Please check references for source code credit
+clear all; clc
+
+target = 1.0;
+
+guesses = zeros(3,1);
+solutions = zeros(3,1);
+
+guesses(1) = 1;
+[eta, F] = ode45('blasius_rhs', [0 10], [0 0 guesses(1)]);
+solutions(1) = F(end, 2);
+
+guesses(2) = 0.1;
+[eta, F] = ode45('blasius_rhs', [0 10], [0 0 guesses(2)]);
+solutions(2) = F(end, 2);
+
+m = (guesses(1) - guesses(2))/(solutions(1) - solutions(2));
+guesses(3) = guesses(2) + m*(target - solutions(2));
+
+[eta, F] = ode45('blasius_rhs', [0 10], [0 0 guesses(3)]);
+solutions(3) = F(end, 2);
+
+tries = [1; 2; 3];
+table(tries, guesses, solutions)
+fprintf('Target: %5.2f\n', target);
